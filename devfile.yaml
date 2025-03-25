@@ -1,16 +1,32 @@
-schemaVersion: 2.2.2
+schemaVersion: 2.2.0
 metadata:
   name: konveyor-kai-coolstore
-  version: 1.0.1
-  description: Reusable workspace for trying Konveyor Kai extension with the Coolstore app
+  version: 1.0.0
+  displayName: Konveyor Kai + Coolstore
+  description: Explore the Coolstore microservices app with the Konveyor Kai AI extension in Dev Spaces or GitHub Codespaces
+  tags:
+    - java
+    - nodejs
+    - ai
+    - sample
+  icon: https://raw.githubusercontent.com/konveyor/editor-extensions/main/docs/assets/logo.png
+
+projects:
+  - name: coolstore
+    git:
+      remotes:
+        origin: https://github.com/rrbanda/coolstore.git
+      checkoutFrom:
+        revision: main
+
 components:
   - name: dev-container
     container:
-      image: registry.redhat.io/devspaces/udi-rhel9:3.21
-      memoryLimit: 2Gi          # < lowered from 3Gi to 2Gi
-      memoryRequest: 1Gi
-      cpuLimit: 1               # < lowered from 2 to 1
-      cpuRequest: 500m
+      image: quay.io/devfile/universal-developer-image:ubi8-latest
+      memoryLimit: "2Gi"
+      memoryRequest: "1Gi"
+      cpuLimit: "1"
+      cpuRequest: "500m"
       mountSources: true
       sourceMapping: /projects
       endpoints:
@@ -29,12 +45,9 @@ components:
         - name: PYTHON_VERSION
           value: "3.11"
       args:
-        - /bin/bash
-        - -c
-        - |
-          sudo dnf install -y python3.11 python3.11-pip java-17-openjdk-devel maven nodejs npm &&
-          sudo alternatives --install /usr/bin/python python /usr/bin/python3.11 1 &&
-          tail -f /dev/null
+        - tail
+        - -f
+        - /dev/null
 
   - name: npm
     volume:
