@@ -1,16 +1,16 @@
 schemaVersion: 2.2.2
 metadata:
-  name: konveyor-kai-dev
-  version: 1.0.0
-  description: Dev environment to try Konveyor AI (Kai) extension with the Coolstore sample app
+  name: konveyor-kai-coolstore
+  version: 1.0.1
+  description: Reusable workspace for trying Konveyor Kai extension with the Coolstore app
 components:
   - name: dev-container
     container:
       image: registry.redhat.io/devspaces/udi-rhel9:3.21
-      memoryLimit: 3Gi
-      memoryRequest: 2Gi
-      cpuLimit: 2
-      cpuRequest: 1
+      memoryLimit: 2Gi          # < lowered from 3Gi to 2Gi
+      memoryRequest: 1Gi
+      cpuLimit: 1               # < lowered from 2 to 1
+      cpuRequest: 500m
       mountSources: true
       sourceMapping: /projects
       endpoints:
