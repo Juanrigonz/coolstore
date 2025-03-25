@@ -1,26 +1,8 @@
-schemaVersion: 2.2.0
+schemaVersion: 2.2.2
 metadata:
   name: konveyor-kai-coolstore
-  version: 1.0.0
-  displayName: Konveyor Kai + Coolstore
-  description: Explore the Coolstore microservices app with the Konveyor Kai AI extension in Dev Spaces or GitHub Codespaces
-  tags:
-    - java
-    - nodejs
-    - ai
-    - sample
-  icon: https://raw.githubusercontent.com/konveyor/editor-extensions/main/docs/assets/logo.png
-
-projects:
-  - name: coolstore
-    git:
-      remotes:
-        origin: https://github.com/rrbanda/coolstore.git
-      checkoutFrom:
-        revision: main
-
 components:
-  - name: dev-container
+  - name: tools
     container:
       image: quay.io/devfile/universal-developer-image:ubi8-latest
       memoryLimit: "2Gi"
@@ -30,17 +12,14 @@ components:
       mountSources: true
       sourceMapping: /projects
       endpoints:
-        - name: frontend
+        - exposure: public
+          name: frontend
+          protocol: https
           targetPort: 3000
-          exposure: public
+        - exposure: public
+          name: backend
           protocol: https
-        - name: backend
           targetPort: 8080
-          exposure: public
-          protocol: https
-      volumeMounts:
-        - name: npm
-          path: /home/user/.npm
       env:
         - name: PYTHON_VERSION
           value: "3.11"
@@ -48,16 +27,27 @@ components:
         - tail
         - -f
         - /dev/null
+      volumeMounts:
+        - name: npm
+          path: /home/user/.npm
 
   - name: npm
     volume:
       size: 1G
 
+projects:
+  - name: coolstore
+    git:
+      remotes:
+        origin: https://github.com/rrbanda/coolstore.git
+      checkoutFrom:
+        revision: main
+
 commands:
   - id: install-frontend
     exec:
-      label: "Install Frontend Dependencies"
-      component: dev-container
+      label: "Download frontend dependencies"
+      component: tools
       workingDir: ${PROJECTS_ROOT}/coolstore/web-app
       commandLine: "npm install"
       group:
@@ -65,8 +55,8 @@ commands:
 
   - id: run-frontend
     exec:
-      label: "Run Frontend"
-      component: dev-container
+      label: "Run the frontend app"
+      component: tools
       workingDir: ${PROJECTS_ROOT}/coolstore/web-app
       commandLine: "npm run dev"
       group:
@@ -74,8 +64,8 @@ commands:
 
   - id: build-backend
     exec:
-      label: "Build Backend (Catalog Service)"
-      component: dev-container
+      label: "Build backend (Catalog Service)"
+      component: tools
       workingDir: ${PROJECTS_ROOT}/coolstore/services/catalog
       commandLine: "mvn clean install"
       group:
@@ -83,8 +73,8 @@ commands:
 
   - id: run-backend
     exec:
-      label: "Run Backend (Catalog Service)"
-      component: dev-container
+      label: "Run backend (Catalog Service)"
+      component: tools
       workingDir: ${PROJECTS_ROOT}/coolstore/services/catalog
       commandLine: "mvn quarkus:dev"
       group:
