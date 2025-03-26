@@ -1,81 +1,91 @@
-schemaVersion: 2.2.2
+apiVersion: workspace.devfile.io/v1alpha2
+kind: DevWorkspace
 metadata:
-  name: konveyor-kai-coolstore
-components:
-  - name: tools
-    container:
-      image: quay.io/devfile/universal-developer-image:ubi9-latest
-      memoryLimit: "2Gi"
-      memoryRequest: "1Gi"
-      cpuLimit: "1"
-      cpuRequest: "500m"
-      mountSources: true
-      sourceMapping: /projects
-      endpoints:
-        - exposure: public
-          name: frontend
-          protocol: https
-          targetPort: 3000
-        - exposure: public
-          name: backend
-          protocol: https
-          targetPort: 8080
-      env:
-        - name: PYTHON_VERSION
-          value: "3.11"
-      args:
-        - tail
-        - -f
-        - /dev/null
-      volumeMounts:
-        - name: npm
-          path: /home/user/.npm
+  name: kai-coolstore
+  namespace: admin-devspaces
+  annotations:
+    che.eclipse.org/che-editor: che-incubator/che-code/latest
+    controller.devfile.io/displayName: Konveyor Kai + Coolstore
+    controller.devfile.io/description: Explore Coolstore app with Konveyor Kai in Dev Spaces
+spec:
+  started: true
+  template:
+    components:
+      - name: tools
+        container:
+          image: quay.io/devfile/universal-developer-image:ubi9-latest
+          memoryLimit: "2Gi"
+          memoryRequest: "1Gi"
+          cpuLimit: "1"
+          cpuRequest: "500m"
+          mountSources: true
+          sourceMapping: /projects
+          env:
+            - name: PYTHON_VERSION
+              value: "3.11"
+          volumeMounts:
+            - name: npm
+              path: /home/user/.npm
+          args: ["tail", "-f", "/dev/null"]
+          endpoints:
+            - name: frontend
+              targetPort: 3000
+              exposure: public
+              protocol: https
+            - name: backend
+              targetPort: 8080
+              exposure: public
+              protocol: https
 
-  - name: npm
-    volume:
-      size: 1G
+      - name: npm
+        volume:
+          size: 1G
 
-projects:
-  - name: coolstore
-    git:
-      remotes:
-        origin: https://github.com/rrbanda/coolstore.git
-      checkoutFrom:
-        revision: main
+      - name: che-code
+        plugin:
+          id: ms-toolshed.vscode-editor
 
-commands:
-  - id: install-frontend
-    exec:
-      label: "Download frontend dependencies"
-      component: tools
-      workingDir: ${PROJECTS_ROOT}/coolstore/web-app
-      commandLine: "npm install"
-      group:
-        kind: build
+    projects:
+      - name: coolstore
+        git:
+          remotes:
+            origin: https://github.com/rrbanda/coolstore.git
+          checkoutFrom:
+            revision: main
 
-  - id: run-frontend
-    exec:
-      label: "Run the frontend app"
-      component: tools
-      workingDir: ${PROJECTS_ROOT}/coolstore/web-app
-      commandLine: "npm run dev"
-      group:
-        kind: run
+    commands:
+      - id: install-frontend
+        exec:
+          label: "Install frontend dependencies"
+          component: tools
+          workingDir: ${PROJECTS_ROOT}/coolstore/web-app
+          commandLine: "npm install"
+          group:
+            kind: build
 
-  - id: build-backend
-    exec:
-      label: "Build backend (Catalog Service)"
-      component: tools
-      workingDir: ${PROJECTS_ROOT}/coolstore/services/catalog
-      commandLine: "mvn clean install"
-      group:
-        kind: build
+      - id: run-frontend
+        exec:
+          label: "Run frontend"
+          component: tools
+          workingDir: ${PROJECTS_ROOT}/coolstore/web-app
+          commandLine: "npm run dev"
+          group:
+            kind: run
 
-  - id: run-backend
-    exec:
-      label: "Run backend (Catalog Service)"
-      component: tools
-      workingDir: ${PROJECTS_ROOT}/coolstore/services/catalog
-      commandLine: "mvn quarkus:dev"
-      group:
-        kind: run
+      - id: build-backend
+        exec:
+          label: "Build backend (Catalog Service)"
+          component: tools
+          workingDir: ${PROJECTS_ROOT}/coolstore/services/catalog
+          commandLine: "mvn clean install"
+          group:
+            kind: build
+
+      - id: run-backend
+        exec:
+          label: "Run backend (Catalog Service)"
+          component: tools
+          workingDir: ${PROJECTS_ROOT}/coolstore/services/catalog
+          commandLine: "mvn quarkus:dev"
+          group:
+            kind: run
