@@ -1,20 +1,8 @@
-schemaVersion: 2.2.2
+schemaVersion: 2.2.0
 metadata:
-  name: vscode-quarkus-dev
-  version: 1.0.0
-  displayName: VS Code + Quarkus
-  description: A workspace with Quarkus tooling and VS Code editor
+  name: kai-devspaces
 components:
-  - name: tools
+  - name: kai-dev-container
     container:
-      image: quay.io/devfile/universal-developer-image:ubi8-latest
-      cpuLimit: "2"
-      cpuRequest: "1"
-      memoryLimit: 4Gi
-      memoryRequest: 2Gi
-      mountSources: true
-      sourceMapping: /projects
-  - name: vscode-editor
-    plugin:
-      id: che-incubator/che-code/latest
-      registryUrl: https://eclipse-che.github.io/che-plugin-registry/main/v3
+      image: quay.io/rbrhssa/kai-devspaces:latest
+      memoryLimit: 8Gi
