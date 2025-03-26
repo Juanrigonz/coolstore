@@ -1,41 +1,20 @@
-apiVersion: workspace.devfile.io/v1alpha2
-kind: DevWorkspace
+schemaVersion: 2.2.2
 metadata:
-  name: vscode-devspace
-  namespace: admin-devspaces
-  annotations:
-    che.eclipse.org/che-editor: che-incubator/che-code/latest
-    che.eclipse.org/last-updated-timestamp: '{{ now | date "2006-01-02T15:04:05Z07:00" }}'
-    controller.devfile.io/devworkspace-config:
-      name: devworkspace-config
-      namespace: openshift-devspaces
-spec:
-  routingClass: che
-  started: true
-  template:
-    attributes:
-      controller.devfile.io/scc: container-build
-      controller.devfile.io/storage-type: per-user
-    components:
-      - name: universal-developer-image
-        container:
-          image: quay.io/devfile/universal-developer-image:ubi8-latest
-          cpuRequest: "2"
-          cpuLimit: "4"
-          memoryRequest: "4Gi"
-          memoryLimit: "6Gi"
-          mountSources: true
-          sourceMapping: /projects
-          volumeMounts:
-            - name: m2
-              path: /home/user/.m2
-          env:
-            - name: PYTHON_VERSION
-              value: "3.11"
-          args:
-            - tail
-            - -f
-            - /dev/null
-      - name: m2
-        volume:
-          size: 2Gi
+  name: vscode-quarkus-dev
+  version: 1.0.0
+  displayName: VS Code + Quarkus
+  description: A workspace with Quarkus tooling and VS Code editor
+components:
+  - name: tools
+    container:
+      image: quay.io/devfile/universal-developer-image:ubi8-latest
+      cpuLimit: "2"
+      cpuRequest: "1"
+      memoryLimit: 4Gi
+      memoryRequest: 2Gi
+      mountSources: true
+      sourceMapping: /projects
+  - name: vscode-editor
+    plugin:
+      id: che-incubator/che-code/latest
+      registryUrl: https://eclipse-che.github.io/che-plugin-registry/main/v3
