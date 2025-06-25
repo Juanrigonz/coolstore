@@ -1,8 +1,28 @@
+
 schemaVersion: 2.2.0
 metadata:
-  name: kai-devspaces
+  name: kai
 components:
-  - name: kai-dev-container
+  - name: kai
     container:
-      image: quay.io/rbrhssa/kai-devspaces:latest
-      memoryLimit: 8Gi
+      image: quay.io/juangonz/kai-devspaces:latest
+     mountSources: true
+     env:
+       - name: MAVEN_CONFIG
+         value: /projects/.m2
+     volumeMounts:
+       - name: mvn-settings-secret
+         path: /home/user/.m2
+ - name: mvn-settings-secret
+   volume:
+     size: 1G  
+commands:
+   - id: maven-build
+     exec:
+       component: tools
+       workingDir: ${PROJECT_SOURCE}
+       commandLine: mvn clean install
+       group:
+         kind: build
+         isDefault: true
+
