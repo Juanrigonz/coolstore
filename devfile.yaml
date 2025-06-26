@@ -13,10 +13,10 @@ components:
       env:
         - name: MAVEN_OPTS
           value: "-Dmaven.repo.local=/home/user/.m2/repository"
-    volume:
-  - name: maven-repo-pvc # Este nombre DEBE coincidir con el name en volumeMounts
-    persistentVolumeClaim:
-    size: 15G 
+    volumes:
+      - name: maven-repo-pvc # Este nombre DEBE coincidir con el name en volumeMounts
+        persistentVolumeClaim:
+          claimName: maven-repo-pvc 
 commands:
    - id: maven-build
      exec:
