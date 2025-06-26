@@ -15,7 +15,8 @@ components:
        - name: m2
          path: /home/user/.m2
  - name: m2
-   volume: {}  
+   volume:
+     size: 10G 
 commands:
    - id: maven-build
      exec:
