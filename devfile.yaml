@@ -6,13 +6,13 @@ components:
   - name: kai
     container:
       image: quay.io/juangonz/kai-devspaces:latest
-       mountSources: true
-       volumeMounts:
-         - name: maven-repo-pvc # Nombre del volumen, que se vinculará al PVC
-           path: /home/user/.m2 # Ruta estándar para el repositorio Maven
-       env:
-         - name: MAVEN_OPTS
-           value: "-Dmaven.repo.local=/home/user/.m2/repository"
+      mountSources: true
+      volumeMounts:
+        - name: maven-repo-pvc # Nombre del volumen, que se vinculará al PVC
+          path: /home/user/.m2 # Ruta estándar para el repositorio Maven
+      env:
+        - name: MAVEN_OPTS
+          value: "-Dmaven.repo.local=/home/user/.m2/repository"
 volumes:
   - name: maven-repo-pvc # Este nombre DEBE coincidir con el name en volumeMounts
     persistentVolumeClaim:
