@@ -13,16 +13,10 @@ components:
       env:
         - name: MAVEN_OPTS
           value: "-Dmaven.repo.local=/home/user/.m2/repository"
-volumes:
+    volume:
   - name: maven-repo-pvc # Este nombre DEBE coincidir con el name en volumeMounts
     persistentVolumeClaim:
-      spec:
-        accessModes:
-          - ReadWriteOnce # Típicamente suficiente para un repositorio Maven en un solo espacio de trabajo
-        resources:
-          requests:
-            storage: 15Gi # Solicita 15 GB de almacenamiento para el repositorio Maven
-        # storageClassName: premium-storage # Descomenta y ajusta si necesitas una StorageClass específica
+    size: 15G 
 commands:
    - id: maven-build
      exec:
