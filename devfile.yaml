@@ -12,10 +12,9 @@ components:
        - name: MAVEN_CONFIG
          value: /home/user/.m2
      volumeMounts:
-       - name: mvn-settings-secret
- - name: mvn-settings-secret
-   volume:
-     size: 1G  
+       - name: m2
+ - name: m2
+   volume: {}  
 commands:
    - id: maven-build
      exec:
