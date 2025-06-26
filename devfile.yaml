@@ -7,15 +7,22 @@ components:
     container:
       image: quay.io/juangonz/kai-devspaces:latest
      mountSources: true
-     env:
-       - name: MAVEN_CONFIG
-         value: /projects/.m2
      volumeMounts:
-       - name: mvn-settings-secret
-         path: /home/user/.m2
- - name: mvn-settings-secret
-   volume:
-     size: 1G  
+       - name: maven-repo-pvc # Nombre del volumen, que se vinculará al PVC
+         path: /home/user/.m2 # Ruta estándar para el repositorio Maven
+     env:
+       - name: MAVEN_OPTS
+         value: "-Dmaven.repo.local=/home/user/.m2/repository"
+volumes:
+  - name: maven-repo-pvc # Este nombre DEBE coincidir con el name en volumeMounts
+    persistentVolumeClaim:
+      spec:
+        accessModes:
+          - ReadWriteOnce # Típicamente suficiente para un repositorio Maven en un solo espacio de trabajo
+        resources:
+          requests:
+            storage: 15Gi # Solicita 15 GB de almacenamiento para el repositorio Maven
+        # storageClassName: premium-storage # Descomenta y ajusta si necesitas una StorageClass específica
 commands:
    - id: maven-build
      exec:
