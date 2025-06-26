@@ -3,27 +3,27 @@ schemaVersion: 2.2.0
 metadata:
   name: kai
 components:
-  - name: kai
-    container:
-      image: quay.io/juangonz/kai-devspaces:latest
-      mountSources: true
-      volumeMounts:
-        - name: maven-repo-pvc # Nombre del volumen, que se vinculará al PVC
-          path: /home/user/.m2 # Ruta estándar para el repositorio Maven
-      env:
-        - name: MAVEN_OPTS
-          value: "-Dmaven.repo.local=/home/user/.m2/repository"
-    volumes:
-      - name: maven-repo-pvc # Este nombre DEBE coincidir con el name en volumeMounts
-        persistentVolumeClaim:
-          claimName: maven-repo-pvc 
+ - name: tools
+   container:
+     image: quay.io/juangonz/kai-devspaces
+     memoryLimit: 1G
+     mountSources: true
+     env:
+       - name: MAVEN_CONFIG
+         value: /home/user/.m2
+     volumeMounts:
+       - name: mvn-settings-secret
+ - name: mvn-settings-secret
+   volume:
+     size: 1G  
 commands:
    - id: maven-build
      exec:
        component: tools
        workingDir: ${PROJECT_SOURCE}
-       commandLine: mvn clean install -DskipTests
+       commandLine: mvn clean install
        group:
          kind: build
          isDefault: true
+
 
