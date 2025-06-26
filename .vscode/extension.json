@@ -1,0 +1,13 @@
+{
+   // See https://go.microsoft.com/fwlink/?LinkId=827846
+   // for the documentation about the extensions.json format
+   "recommendations": [
+       "llvm-vs-code-extensions.vscode-clangd",
+       "redhat.java",
+       "vscjava.vscode-java-debug",
+       "vscjava.vscode-java-test",        
+       "vscjava.vscode-java-pack",
+       "redhat.apache-camel-extension-pack",
+       "eclipse-cdt.cdt-gdb-vscode"
+   ]
+}
