@@ -6,7 +6,7 @@ components:
  - name: tools
    container:
      image: quay.io/juangonz/kai-devspaces:1.0
-     memoryLimit: 1G
+     memoryLimit: 3G
      mountSources: true
      env:
        - name: MAVEN_CONFIG
