@@ -5,7 +5,7 @@ metadata:
 components:
  - name: tools
    container:
-     image: quay.io/juangonz/kai-devspaces
+     image: quay.io/juangonz/kai-devspaces:1.0
      memoryLimit: 1G
      mountSources: true
      env:
